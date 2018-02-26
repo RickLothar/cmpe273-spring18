@@ -1,5 +1,7 @@
 from flask import Flask, request, jsonify
 
+# this file for test and others, please use hello.py to run the program
+
 app = Flask(__name__)
 
 user_id = 0
