@@ -1,31 +1,51 @@
 from datetime import date
 
-from .person import Person
-from common.base import session_factory
+from model import Wallet, Person, Base
+# from common.base import session_factory
+
+from sqlalchemy import create_engine
+engine = create_engine('sqlite:///assignment2.db')
+Base.metadata.create_all(engine)
 
 
-def create_people():
+def session_factory():
+    from sqlalchemy.orm import sessionmaker
+    DBSession = sessionmaker(bind=engine)
+    return DBSession()
+
+
+def create_wallets():
     session = session_factory()
-    bruno = Person("Bruno Krebs", date(1984, 10, 20), 182, 84.5)
-    john = Person("John Doe", date(1990, 5, 17), 173, 90)
-    session.add(bruno)
-    session.add(john)
+    walletA = Wallet('0x12345', 1000, "345LKJHJFHLJHDIUSHidhjsdsdf37428")
+    walletB = Wallet('0x12345', 2000, "345LKJHJFHLJHDadfyidhjsdsdf37428")
+    session.add(walletA)
+    session.add(walletB)
     session.commit()
     session.close()
 
 
-def get_people():
+# def create_wallets():
+#     session = session_factory()
+#     bruno = Person("Bruno Krebs", date(1984, 10, 20), 182, 84.5)
+#     john = Person("John Doe", date(1990, 5, 17), 173, 90)
+#     session.add(bruno)
+#     session.add(john)
+#     session.commit()
+#     session.close()
+
+
+def get_wallets():
     session = session_factory()
-    people_query = session.query(Person)
+    wallet_query = session.query(Wallet)
     session.close()
-    return people_query.all()
+    return wallet_query.all()
 
 
 if __name__ == "__main__":
-    people = get_people()
-    if len(people) == 0:
-        create_people()
-    people = get_people()
+    wallets = get_wallets()
+    if len(wallets) == 0:
+        create_wallets()
+    wallets = get_wallets()
 
-    for person in people:
-        print(f'{person.name} was born in {person.date_of_birth}')
+    for wallet in wallets:
+        print(wallet)
